@@ -52,7 +52,6 @@ public final class AvailabilityService extends ServiceSupport {
   }
 
   public SlotView saveSlot(long uid, long tid, Long id, LocalDateTime start, LocalDateTime end) {
-    if (id != null) throw new AppException(501, "Editing is added on Day 3 of the learning build.");
     synchronized (store) {
       ownTutor(uid, tid);
       if (id != null) {
