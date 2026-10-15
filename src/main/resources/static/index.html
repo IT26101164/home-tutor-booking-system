@@ -1,1 +1,41 @@
-<!doctype html><html><meta charset="utf-8"><title>Home Tutor Bootstrap</title><body><h1>Home Tutor: starter scaffold</h1><p>Integrate the six Day 1 member handouts to build the UI preview.</p></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#163d35" />
+    <title>HomeTutor — Find your next breakthrough</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/js/shared.js" defer></script>
+    <script src="/js/accounts.js" defer></script>
+    <script src="/js/tutors.js" defer></script>
+    <script src="/js/availability.js" defer></script>
+    <script src="/js/bookings.js" defer></script>
+    <script src="/js/reviews.js" defer></script>
+    <script src="/js/admin.js" defer></script>
+    <script src="/js/router.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="#home"
+        ><span class="brand-icon">ht</span> HomeTutor<span class="brand-dot"
+          >.</span
+        ></a
+      >
+      <nav id="nav" aria-label="Main navigation"></nav>
+    </header>
+    <main id="app"><div class="empty">Loading HomeTutor…</div></main>
+    <footer>
+      <a class="brand small" href="#home">HomeTutor.</a
+      ><span>Good teachers. Greater possibilities.</span
+      ><span>All session times are Sri Lanka time · LKR</span>
+    </footer>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <dialog id="modal">
+      <button class="close" data-action="close" aria-label="Close dialog">
+        ×
+      </button>
+      <div id="modal-content"></div>
+    </dialog>
+  </body>
+</html>
