@@ -19,5 +19,6 @@ class AvailabilityModuleTest {
     svc.saveSlot(f.tutor, f.profile, slot.id(), start.plusDays(1), start.plusDays(1).plusHours(1));
     svc.deleteSlot(f.tutor, slot.id());
     assertTrue(svc.slots(f.profile, false).stream().noneMatch(x -> x.id() == slot.id()));
+    
   }
 }
