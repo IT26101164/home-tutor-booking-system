@@ -72,6 +72,16 @@ public final class AvailabilityService extends ServiceSupport {
   }
 
   public void deleteSlot(long uid, long id) {
-    throw new AppException(501, "This operation is added on Day 4 of the learning build.");
+    synchronized (store) {
+      Slot x = slot(id);
+      ownTutor(uid, x.tutorId());
+      if (store.state.bookings.values().stream().anyMatch(b -> b.slotId() == id))
+        throw fail(409, "A slot with booking history cannot be deleted.");
+      commit(
+          s -> {
+            s.slots.remove(id);
+            return null;
+          });
+    }
   }
 }
