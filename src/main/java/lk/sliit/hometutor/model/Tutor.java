@@ -8,7 +8,7 @@ public record Tutor(
     long userId,
     String subject,
     String qualification,
-    String location,aa
+    String location,
     String bio,
     BigDecimal hourlyFee,
     int experienceYears) {}
