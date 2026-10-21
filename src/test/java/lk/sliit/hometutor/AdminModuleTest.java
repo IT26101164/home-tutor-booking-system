@@ -2,7 +2,7 @@ package lk.sliit.hometutor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import lk.sliit.hometutor.service.*;
+import lk.sliit.hometutor.service.*:
 import org.junit.jupiter.api.Test;
 
 class AdminModuleTest {
