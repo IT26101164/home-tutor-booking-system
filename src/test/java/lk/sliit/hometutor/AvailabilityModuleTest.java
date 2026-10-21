@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class AvailabilityModuleTest {
   @Test
+  
   void componentCrud() throws Exception {
     ModuleFixture f = new ModuleFixture();
     var svc = f.app.availability();
