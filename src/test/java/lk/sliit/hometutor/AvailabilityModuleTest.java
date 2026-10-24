@@ -22,4 +22,5 @@ class AvailabilityModuleTest {
     assertTrue(svc.slots(f.profile, false).stream().noneMatch(x -> x.id() == slot.id()));
     
   }
+  
 }
