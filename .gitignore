@@ -1,8 +1,0 @@
-target/
-data/
-.idea/
-*.iml
-.DS_Store
-*.jar
-node_modules/
-playwright-report/
