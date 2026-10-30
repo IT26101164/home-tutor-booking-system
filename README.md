@@ -1,20 +1,22 @@
 # Home Tutor Booking System
 
-Java 17 + Spring Boot project scaffold for a six-member team.
+This repository follows the actual IntelliJ project structure in the supplied HomeTutor database edition.
 
-## Team modules
-- `account` — registration, login, roles and user profiles
-- `tutor` — tutor profiles, tutor search and algorithms
-- `availability` — tutor availability and lesson slots
-- `booking` — booking lifecycle and student/tutor booking views
-- `reviews` — ratings, reviews and moderation
-- `admin` — administration and user management
+## Technology
+- Java 17
+- Spring Boot 3.5.0
+- Maven
+- H2 database
 
-## Workflow
-1. Clone the repository.
-2. Checkout your assigned feature branch.
-3. Add your code only in your module's package/folders.
-4. Commit and push your feature branch.
-5. Open a pull request to `main`; do not push directly to `main`.
+## Source package
+All team members work inside the shared package `lk.sliit.hometutor`:
+- `algorithm` — BST and sorting algorithms
+- `model` — domain classes
+- `repository` — persistence layer
+- `service` — business logic
+- `web` — controllers and configuration
 
-See `team/` and `docs/` for shared project notes as they are added.
+The six feature branches represent ownership areas, not six separate Java root packages.
+
+## Team workflow
+Clone the repository, checkout your assigned feature branch, add your module code in the matching shared packages, then push and open a pull request to `main`.
