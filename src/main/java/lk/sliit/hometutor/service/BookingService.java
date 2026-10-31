@@ -66,86 +66,14 @@ public final class BookingService extends ServiceSupport {
     }
 
     public BookingView changeStatus(long uid, long id, String target) {
-        synchronized (store) {
-            User u = actor(uid);
-            Booking b = booking(id);
-            boolean admin = u.getRole().equals("ADMIN"),
-                    owner = b.studentId() == uid,
-                    tutorOwner = store.state.tutors.get(b.tutorId()).userId() == uid;
-            Booking.Status next;
-            try {
-                next = Booking.Status.valueOf(target);
-            } catch (Exception e) {
-                throw fail(400, "Invalid booking status.");
-            }
-            switch (next) {
-                case CONFIRMED, REJECTED -> {
-                    if (!admin && !tutorOwner) throw fail(403, "Only the tutor can accept or reject.");
-                    if (b.status() != Booking.Status.PENDING)
-                        throw fail(409, "Only pending bookings can be accepted or rejected.");
-                    if (next == Booking.Status.CONFIRMED && !slot(b.slotId()).start().isAfter(now()))
-                        throw fail(409, "Cannot accept a booking that has already started.");
-                }
-                case CANCELLED -> {
-                    if (!admin && !owner && !tutorOwner) throw fail(403, "Not your booking.");
-                    if (!b.holdsSlot())
-                        throw fail(409, "Only pending or confirmed bookings can be cancelled.");
-                    if (!admin && !slot(b.slotId()).start().isAfter(now()))
-                        throw fail(
-                                409, "Contact the administrator to cancel a session that has already started.");
-                }
-                case COMPLETED -> {
-                    if (!admin && !tutorOwner) throw fail(403, "Only the tutor can complete the session.");
-                    if (b.status() != Booking.Status.CONFIRMED || slot(b.slotId()).end().isAfter(now()))
-                        throw fail(409, "Complete a confirmed session only after its end time.");
-                }
-                default -> throw fail(400, "This transition is not allowed.");
-            }
-            commit(
-                    s -> {
-                        s.bookings.put(id, b.withStatus(next));
-                        return null;
-                    });
-            return view(booking(id));
-        }
+        throw new AppException(501, "This operation is added on Day 3 of the learning build.");
     }
 
     public BookingView reschedule(long uid, long id, long slotId) {
-        synchronized (store) {
-            role(uid, "STUDENT");
-            Booking b = booking(id);
-            if (b.studentId() != uid) throw fail(403, "Not your booking.");
-            if (!b.holdsSlot() || !slot(b.slotId()).start().isAfter(now()))
-                throw fail(409, "Only future active bookings can be rescheduled.");
-            Slot sl = slot(slotId);
-            if (sl.tutorId() != b.tutorId()) throw fail(400, "Select another slot for the same tutor.");
-            if (sl.id() == b.slotId()) throw fail(400, "Select a different slot.");
-            canBook(uid, sl, id);
-            BigDecimal fee = total(sl);
-            commit(
-                    s -> {
-                        s.bookings.put(
-                                id, new Booking(id, uid, b.tutorId(), slotId, Booking.Status.PENDING, fee));
-                        return null;
-                    });
-            return view(booking(id));
-        }
+        throw new AppException(501, "This operation is added on Day 3 of the learning build.");
     }
 
     public void deleteBooking(long uid, long id) {
-        synchronized (store) {
-            User u = actor(uid);
-            Booking b = booking(id);
-            if (!u.getRole().equals("ADMIN") && b.studentId() != uid)
-                throw fail(403, "Not your booking.");
-            if (b.status() != Booking.Status.CANCELLED && b.status() != Booking.Status.REJECTED)
-                throw fail(409, "Only cancelled or rejected bookings may be deleted.");
-            commit(
-                    s -> {
-                        s.bookings.remove(id);
-                        return null;
-                    });
-        }
+        throw new AppException(501, "This operation is added on Day 4 of the learning build.");
     }
 }
-

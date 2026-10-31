@@ -36,9 +36,6 @@ const field = (label, name, value = "", type = "text", extra = "") =>
     `<div class="field"><label for="${e(name)}">${e(label)}</label><input id="${e(name)}" name="${e(name)}" type="${type}" value="${e(value)}" ${extra}></div>`;
 const status = (s) => `<span class="status ${e(s)}">${e(s)}</span>`;
 async function api(url, method = "GET", data) {
-    return window.previewApi(url, method, data);
-}
-async function futureBackendApi(url, method = "GET", data) {
     let response = await fetch("/api" + url, {
         method,
         credentials: "same-origin",
