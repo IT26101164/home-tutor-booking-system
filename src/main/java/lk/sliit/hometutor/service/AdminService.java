@@ -77,7 +77,29 @@ public final class AdminService extends ServiceSupport {
     }
 
     public void deactivate(long uid, long target) {
-        throw new AppException(501, "This operation is added on Day 4 of the learning build.");
+        synchronized (store) {
+            role(uid, "ADMIN");
+            if (uid == target) throw fail(400, "You cannot deactivate your own admin account.");
+            User u = store.state.users.get(target);
+            if (u == null) throw fail(404, "Account not found.");
+            boolean activeBooking =
+                    store.state.bookings.values().stream()
+                            .anyMatch(
+                                    b ->
+                                            b.holdsSlot()
+                                                    && (b.studentId() == target
+                                                    || store.state.tutors.get(b.tutorId()).userId() == target));
+            if (activeBooking)
+                throw fail(409, "Resolve active bookings before deactivating this account.");
+            commit(
+                    next -> {
+                        next.users.put(
+                                target,
+                                User.create(
+                                        target, u.getName(), u.getEmail(), u.getPasswordHash(), false, u.getRole()));
+                        return null;
+                    });
+        }
     }
 
     public UserView reactivate(long uid, long target) {
