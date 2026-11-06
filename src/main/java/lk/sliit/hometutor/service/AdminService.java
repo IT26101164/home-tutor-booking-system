@@ -59,7 +59,21 @@ public final class AdminService extends ServiceSupport {
     }
 
     public UserView updateUser(long uid, long target, String name, String address) {
-        throw new AppException(501, "This operation is added on Day 3 of the learning build.");
+        synchronized (store) {
+            role(uid, "ADMIN");
+            User u = store.state.users.get(target);
+            if (u == null) throw fail(404, "Account not found.");
+            String n = text(name, "Name", 80), e = email(address);
+            if (store.state.users.values().stream()
+                    .anyMatch(x -> x.getId() != target && x.getEmail().equals(e)))
+                throw fail(409, "This email is already registered.");
+            return commit(
+                    next -> {
+                        User edited = User.create(target, n, e, u.getPasswordHash(), u.isActive(), u.getRole());
+                        next.users.put(target, edited);
+                        return view(edited);
+                    });
+        }
     }
 
     public void deactivate(long uid, long target) {
@@ -67,6 +81,18 @@ public final class AdminService extends ServiceSupport {
     }
 
     public UserView reactivate(long uid, long target) {
-        throw new AppException(501, "This operation is added on Day 3 of the learning build.");
+        synchronized (store) {
+            role(uid, "ADMIN");
+            User u = store.state.users.get(target);
+            if (u == null) throw fail(404, "Account not found.");
+            return commit(
+                    next -> {
+                        User restored =
+                                User.create(
+                                        target, u.getName(), u.getEmail(), u.getPasswordHash(), true, u.getRole());
+                        next.users.put(target, restored);
+                        return view(restored);
+                    });
+        }
     }
 }
