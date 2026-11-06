@@ -1,4 +1,5 @@
 package lk.sliit.hometutor.service;
+
 import java.math.*;
 import java.time.*;
 import java.util.*;
@@ -17,41 +18,40 @@ public final class AvailabilityService extends ServiceSupport {
     synchronized (store) {
       tutor(tid);
       return store.state.slots.values().stream()
-          .filter(s -> s.tutorId() == tid)
-          .sorted(Comparator.comparing(Slot::start))
-          .map(
-              s ->
-                  new SlotView(
-                      s.id(),
-                      s.tutorId(),
-                      s.start(),
-                      s.end(),
-                      s.start().isAfter(now()) && !held(s.id(), -1)))
-          .filter(s -> !onlyAvailable || s.available())
-          .toList();
+              .filter(s -> s.tutorId() == tid)
+              .sorted(Comparator.comparing(Slot::start))
+              .map(
+                      s ->
+                              new SlotView(
+                                      s.id(),
+                                      s.tutorId(),
+                                      s.start(),
+                                      s.end(),
+                                      s.start().isAfter(now()) && !held(s.id(), -1)))
+              .filter(s -> !onlyAvailable || s.available())
+              .toList();
     }
   }
 
   private void validateSlot(long tid, long ignore, LocalDateTime start, LocalDateTime end) {
     if (start == null
-        || end == null
-        || !start.isAfter(now())
-        || !end.isAfter(start)
-        || Duration.between(start, end).toMinutes() < 15
-        || Duration.between(start, end).compareTo(Duration.ofHours(8)) > 0)
+            || end == null
+            || !start.isAfter(now())
+            || !end.isAfter(start)
+            || Duration.between(start, end).toMinutes() < 15
+            || Duration.between(start, end).compareTo(Duration.ofHours(8)) > 0)
       throw fail(400, "Choose a future slot lasting 15 minutes to 8 hours.");
     if (store.state.slots.values().stream()
-        .anyMatch(
-            s ->
-                s.id() != ignore
-                    && s.tutorId() == tid
-                    && start.isBefore(s.end())
-                    && end.isAfter(s.start())))
+            .anyMatch(
+                    s ->
+                            s.id() != ignore
+                                    && s.tutorId() == tid
+                                    && start.isBefore(s.end())
+                                    && end.isAfter(s.start())))
       throw fail(409, "This slot overlaps an existing tutor slot.");
   }
 
   public SlotView saveSlot(long uid, long tid, Long id, LocalDateTime start, LocalDateTime end) {
-    if (id != null) throw new AppException(501, "Editing is added on Day 3 of the learning build.");
     synchronized (store) {
       ownTutor(uid, tid);
       if (id != null) {
@@ -62,12 +62,12 @@ public final class AvailabilityService extends ServiceSupport {
       }
       validateSlot(tid, id == null ? -1 : id, start, end);
       return commit(
-          s -> {
-            long sid = id == null ? s.newId() : id;
-            Slot v = new Slot(sid, tid, start, end);
-            s.slots.put(sid, v);
-            return new SlotView(sid, tid, start, end, true);
-          });
+              s -> {
+                long sid = id == null ? s.newId() : id;
+                Slot v = new Slot(sid, tid, start, end);
+                s.slots.put(sid, v);
+                return new SlotView(sid, tid, start, end, true);
+              });
     }
   }
 
