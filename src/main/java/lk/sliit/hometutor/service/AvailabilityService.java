@@ -55,6 +55,7 @@ public final class AvailabilityService extends ServiceSupport {
     synchronized (store) {
       ownTutor(uid, tid);
       if (id != null) {
+        // Updating is allowed only for this tutor's slot with no booking history.
         Slot old = slot(id);
         if (old.tutorId() != tid) throw fail(403, "Slot belongs to another tutor.");
         if (store.state.bookings.values().stream().anyMatch(b -> b.slotId() == id))
@@ -77,6 +78,7 @@ public final class AvailabilityService extends ServiceSupport {
       ownTutor(uid, x.tutorId());
       if (store.state.bookings.values().stream().anyMatch(b -> b.slotId() == id))
         throw fail(409, "A slot with booking history cannot be deleted.");
+      // Keep the booking-history rule consistent across both mutation operations.
       commit(
               s -> {
                 s.slots.remove(id);
