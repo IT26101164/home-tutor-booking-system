@@ -3,3 +3,5 @@
 *.iml
 /data/*.mv.db
 /data/*.trace.db
+
+data/state.txt
